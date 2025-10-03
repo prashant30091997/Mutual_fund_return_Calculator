@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Compound Interest Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom focus styles for better accessibility */
+        .form-input:focus, .form-select:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            --tw-ring-color: #2563eb;
+            --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+            --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+            box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-4xl bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Advanced Compound Interest Calculator</h1>
+            <p class="text-gray-500 mt-2">Plan your financial future by projecting your investment growth.</p>
+        </div>
+
+        <!-- Form for inputs -->
+        <form id="calculator-form" class="space-y-6">
+            <!-- Calculation Mode -->
+            <fieldset class="p-4 border rounded-lg">
+                <legend class="text-lg font-semibold text-blue-700 px-2">Calculation Mode</legend>
+                <div class="flex justify-center space-x-4 sm:space-x-10 mt-2">
+                    <label for="calcModeMaturity" class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg">
+                        <input type="radio" id="calcModeMaturity" name="calcMode" value="maturity" class="form-radio h-4 w-4 text-blue-600" checked>
+                        <span class="font-medium text-gray-700">Calculate Maturity Value</span>
+                    </label>
+                    <label for="calcModeInvestment" class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg">
+                        <input type="radio" id="calcModeInvestment" name="calcMode" value="investment" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="font-medium text-gray-700">Calculate Regular Investment</span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                <!-- Investment Details -->
+                <fieldset class="space-y-6 p-4 border rounded-lg">
+                    <legend class="text-lg font-semibold text-blue-700 px-2">Investment Details</legend>
+                    <div>
+                        <label for="initial-investment" class="block text-sm font-medium text-gray-700">Initial Lumpsum Amount (₹)</label>
+                        <input type="number" id="initial-investment" value="100000" class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm" required min="0">
+                    </div>
+                    <div id="regular-investment-container">
+                        <label for="regular-investment" class="block text-sm font-medium text-gray-700">Regular Investment Amount (₹)</label>
+                        <input type="number" id="regular-investment" value="5000" class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm" required min="0">
+                    </div>
+                    <div id="target-maturity-container" class="hidden">
+                         <label for="target-maturity-value" class="block text-sm font-medium text-gray-700">Target Maturity Value (₹)</label>
+                        <input type="number" id="target-maturity-value" value="10000000" class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm" min="0">
+                    </div>
+                    <div>
+                        <label for="investment-frequency" class="block text-sm font-medium text-gray-700">Regular Investment Frequency</label>
+                        <select id="investment-frequency" class="form-select mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="12" selected>Monthly</option>
+                            <option value="4">Quarterly</option>
+                            <option value="2">Half-Yearly</option>
+                            <option value="1">Yearly</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <!-- Interest and Time Period Details -->
+                <fieldset class="space-y-6 p-4 border rounded-lg">
+                     <legend class="text-lg font-semibold text-blue-700 px-2">Growth Details</legend>
+                    <div>
+                        <label for="interest-rate" class="block text-sm font-medium text-gray-700">Annual Rate of Interest (%)</label>
+                        <input type="number" id="interest-rate" value="10" step="0.01" class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm" required min="0">
+                    </div>
+                    <div>
+                        <label for="compounding-frequency" class="block text-sm font-medium text-gray-700">Compounding Frequency</label>
+                        <select id="compounding-frequency" class="form-select mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="12">Monthly</option>
+                            <option value="4" selected>Quarterly</option>
+                            <option value="2">Half-Yearly</option>
+                            <option value="1">Yearly</option>
+                            <option value="0.5">Every 2 Years</option>
+                            <option value="0.3333333333333333">Every 3 Years</option>
+                        </select>
+                    </div>
+                     <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="active-period" class="block text-sm font-medium text-gray-700">Active Period (Yrs)</label>
+                            <input type="number" id="active-period" value="10" class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm" required min="0">
+                        </div>
+                        <div>
+                            <label for="total-period" class="block text-sm font-medium text-gray-700">Total Period (Yrs)</label>
+                            <input type="number" id="total-period" value="20" class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm" required min="0">
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Error Message -->
+            <div id="error-message" class="text-red-600 text-center font-medium hidden"></div>
+
+            <!-- Calculate Button -->
+            <div class="flex justify-center pt-4">
+                <button type="submit" class="w-full md:w-1/2 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-105">
+                    Calculate
+                </button>
+            </div>
+        </form>
+        
+        <!-- Results Section -->
+        <div id="results-section" class="mt-10 pt-6 border-t border-gray-200 hidden">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Projected Growth</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div class="bg-blue-50 p-6 rounded-lg">
+                    <h3 id="result-title-1" class="text-lg font-semibold text-blue-800">Total Amount Invested</h3>
+                    <p id="result-value-1" class="text-2xl font-bold text-blue-900 mt-2">₹0</p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg">
+                    <h3 id="result-title-2" class="text-lg font-semibold text-green-800">Interest Earned</h3>
+                    <p id="result-value-2" class="text-2xl font-bold text-green-900 mt-2">₹0</p>
+                </div>
+                <div class="bg-indigo-50 p-6 rounded-lg">
+                    <h3 id="result-title-3" class="text-lg font-semibold text-indigo-800">Maturity Value</h3>
+                    <p id="result-value-3" class="text-3xl font-extrabold text-indigo-900 mt-2">₹0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('calculator-form');
+        const resultsSection = document.getElementById('results-section');
+        const errorMessage = document.getElementById('error-message');
+        const calcModeRadios = document.querySelectorAll('input[name="calcMode"]');
+        
+        const regularInvestmentContainer = document.getElementById('regular-investment-container');
+        const targetMaturityContainer = document.getElementById('target-maturity-container');
+        const regularInvestmentInput = document.getElementById('regular-investment');
+        const targetMaturityInput = document.getElementById('target-maturity-value');
+
+        // --- Mode Switching Logic ---
+        function handleModeChange() {
+            resultsSection.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            if (document.getElementById('calcModeMaturity').checked) {
+                regularInvestmentContainer.classList.remove('hidden');
+                regularInvestmentInput.required = true;
+                targetMaturityContainer.classList.add('hidden');
+                targetMaturityInput.required = false;
+            } else {
+                regularInvestmentContainer.classList.add('hidden');
+                regularInvestmentInput.required = false;
+                targetMaturityContainer.classList.remove('hidden');
+                targetMaturityInput.required = true;
+            }
+        }
+        calcModeRadios.forEach(radio => radio.addEventListener('change', handleModeChange));
+
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Clear previous errors and hide results
+            errorMessage.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+
+            // --- Get Common User Inputs ---
+            const initialInvestment = parseFloat(document.getElementById('initial-investment').value);
+            const investmentFrequency = parseInt(document.getElementById('investment-frequency').value);
+            const interestRate = parseFloat(document.getElementById('interest-rate').value) / 100;
+            const compoundingFrequency = parseFloat(document.getElementById('compounding-frequency').value);
+            const activePeriod = parseFloat(document.getElementById('active-period').value);
+            const totalPeriod = parseFloat(document.getElementById('total-period').value);
+            
+            // --- Input Validation ---
+            if (isNaN(initialInvestment) || isNaN(interestRate) || isNaN(activePeriod) || isNaN(totalPeriod)) {
+                showError("Please fill in all common fields with valid numbers.");
+                return;
+            }
+            if (activePeriod > totalPeriod) {
+                showError("Active investment period cannot be greater than the total period.");
+                return;
+            }
+            
+            // --- Calculation Logic ---
+            const lumpsumFV = initialInvestment * Math.pow(1 + interestRate / compoundingFrequency, compoundingFrequency * totalPeriod);
+
+            if (document.getElementById('calcModeMaturity').checked) {
+                calculateMaturityValue(initialInvestment, investmentFrequency, interestRate, compoundingFrequency, activePeriod, totalPeriod, lumpsumFV);
+            } else {
+                calculateRegularInvestment(initialInvestment, investmentFrequency, interestRate, compoundingFrequency, activePeriod, totalPeriod, lumpsumFV);
+            }
+        });
+
+        function calculateMaturityValue(initialInvestment, investmentFrequency, interestRate, compoundingFrequency, activePeriod, totalPeriod, lumpsumFV) {
+            const regularInvestment = parseFloat(regularInvestmentInput.value);
+            if(isNaN(regularInvestment)) {
+                showError("Please enter a valid regular investment amount.");
+                return;
+            }
+
+            let regularFv = 0;
+            if (regularInvestment > 0 && activePeriod > 0) {
+                const effectiveRatePerPayment = Math.pow(1 + interestRate / compoundingFrequency, compoundingFrequency / investmentFrequency) - 1;
+                const numberOfPayments = investmentFrequency * activePeriod;
+                const fvAnnuityAtActiveEnd = regularInvestment * (Math.pow(1 + effectiveRatePerPayment, numberOfPayments) - 1) / effectiveRatePerPayment;
+                const growthPeriod = totalPeriod - activePeriod;
+                regularFv = fvAnnuityAtActiveEnd * Math.pow(1 + interestRate / compoundingFrequency, compoundingFrequency * growthPeriod);
+            }
+
+            const maturityValue = lumpsumFV + regularFv;
+            const totalInvested = initialInvestment + (regularInvestment * investmentFrequency * activePeriod);
+            const interestEarned = maturityValue - totalInvested;
+
+            displayResults({
+                mode: 'maturity',
+                totalInvested,
+                interestEarned,
+                maturityValue
+            });
+        }
+        
+        function calculateRegularInvestment(initialInvestment, investmentFrequency, interestRate, compoundingFrequency, activePeriod, totalPeriod, lumpsumFV) {
+            const targetMaturityValue = parseFloat(targetMaturityInput.value);
+            if(isNaN(targetMaturityValue)) {
+                showError("Please enter a valid target maturity value.");
+                return;
+            }
+
+            if (targetMaturityValue <= lumpsumFV) {
+                showError("Target value is already met or exceeded by the lumpsum investment alone. No regular investment is needed.");
+                return;
+            }
+
+            const requiredFvFromRegular = targetMaturityValue - lumpsumFV;
+            let calculatedRegularInvestment = 0;
+
+            if(activePeriod > 0) {
+                const effectiveRatePerPayment = Math.pow(1 + interestRate / compoundingFrequency, compoundingFrequency / investmentFrequency) - 1;
+                const numberOfPayments = investmentFrequency * activePeriod;
+                const growthPeriod = totalPeriod - activePeriod;
+
+                const fvAnnuityFactor = (Math.pow(1 + effectiveRatePerPayment, numberOfPayments) - 1) / effectiveRatePerPayment;
+                const growthFactor = Math.pow(1 + interestRate / compoundingFrequency, compoundingFrequency * growthPeriod);
+                
+                if (fvAnnuityFactor > 0) {
+                     calculatedRegularInvestment = requiredFvFromRegular / (fvAnnuityFactor * growthFactor);
+                }
+            }
+
+            if (calculatedRegularInvestment <= 0) {
+                 showError("Cannot calculate a valid regular investment for the given parameters.");
+                return;
+            }
+
+            const totalInvested = initialInvestment + (calculatedRegularInvestment * investmentFrequency * activePeriod);
+            const interestEarned = targetMaturityValue - totalInvested;
+
+            displayResults({
+                mode: 'investment',
+                requiredInvestment: calculatedRegularInvestment,
+                interestEarned,
+                targetMaturityValue
+            });
+        }
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        function displayResults(data) {
+            const currencyFormatter = new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            });
+
+            const resultTitle1 = document.getElementById('result-title-1');
+            const resultValue1 = document.getElementById('result-value-1');
+            const resultTitle2 = document.getElementById('result-title-2');
+            const resultValue2 = document.getElementById('result-value-2');
+            const resultTitle3 = document.getElementById('result-title-3');
+            const resultValue3 = document.getElementById('result-value-3');
+            
+            if (data.mode === 'maturity') {
+                resultTitle1.textContent = "Total Amount Invested";
+                resultValue1.textContent = currencyFormatter.format(data.totalInvested);
+                resultTitle2.textContent = "Interest Earned";
+                resultValue2.textContent = currencyFormatter.format(data.interestEarned);
+                resultTitle3.textContent = "Maturity Value";
+                resultValue3.textContent = currencyFormatter.format(data.maturityValue);
+            } else { // mode === 'investment'
+                resultTitle1.textContent = "Required Regular Investment";
+                resultValue1.textContent = currencyFormatter.format(data.requiredInvestment);
+                resultTitle2.textContent = "Interest Earned";
+                resultValue2.textContent = currencyFormatter.format(data.interestEarned);
+                resultTitle3.textContent = "Target Maturity Value";
+                resultValue3.textContent = currencyFormatter.format(data.targetMaturityValue);
+            }
+
+
+            resultsSection.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
+
